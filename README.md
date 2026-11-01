@@ -19,7 +19,7 @@ Last updated: 2026-11-01.
 
 Laptick-1 has passed the halfway point of its main run. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
 
-In the latest repetition check, none of 100 samples got stuck in a loop, down from 5 at step 16,982. It still repeats four-word phrases more than three times as often as real text.
+In the latest repetition check, none of 100 samples got stuck in a loop, down from 5 at step 16,982. It still repeats four-word phrases more than real text does, though that comparison is only rough.
 
 ## Samples
 
