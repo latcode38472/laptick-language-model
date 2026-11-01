@@ -108,4 +108,4 @@ Not yet. The first public release is planned for Laptick-3.3.
 No. That site is a separate product, and it just happens to share the name.
 
 **Who built it?**
-One person, as a hobby project. Most of the code was written with AI coding assistants (Claude and Codex).
+One person(me), as a hobby project.
