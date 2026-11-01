@@ -8,31 +8,56 @@ Laptick is not related to [laptick.com](https://www.laptick.com/), an AI laptop 
 
 ## Status
 
-Last updated: 2026-10-31.
+Last updated: 2026-11-01.
 
 | | |
 |---|---|
 | **Stage** | Laptick-1 pretraining, main run |
-| **Progress** | Step 21,215 of 48,066 (44.1%) |
-| **Tokens read** | 2.78 billion |
-| **Validation loss (English)** | 2.9733, the lowest so far (step 21,000) |
+| **Progress** | Step 24,350 of 48,066 (50.7%) |
+| **Tokens read** | 3.19 billion |
+| **Validation loss (English)** | 2.9387, the lowest so far (step 24,000) |
 
-Laptick-1 can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
+Laptick-1 has passed the halfway point of its main run. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
+
+In the latest repetition check, none of 100 samples got stuck in a loop, down from 5 at step 16,982. It still repeats four-word phrases more than three times as often as real text.
 
 ## Samples
 
-These are raw outputs from step 21,215, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
+These are raw outputs from step 24,350, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
 
 Sometimes it does well:
 
-> **The best way to learn a new language is** to practice. If you are struggling, try practicing a new language with a friend.
+> **The best way to learn a new language is** to practice. If you are struggling, try practicing a new language with a native speaker. This will help you to pick up a new vocabulary and learn to speak it.
 
 Often it doesn't:
 
-> **Artificial intelligence is** increasingly being used to solve the huge problems of humans. [...] Artificial intelligence is a type of AI that works by studying the inputs of a computer system.
+> **The sun is a star that** emits light from its core, which is the outermost part of our sun, also known as the sun.
+
+> **ChatGPT is** an AI tool that has been used to generate text. [...] It is a language model used for text generation in ChatGPT. It is a language model that is used for text generation in ChatGPT.
 
 > **Q: What is your name?**
-> **A:** My name is Jack.
+> **A:** My name is Robert and I am one of the most trusted people in the world!
+
+Its Python looks right at first glance, but it often wouldn't run. Given `class Stack:`, it wrote this, and `stack.append(0)` would crash because `stack` was never defined:
+
+```python
+class Stack:
+	"""An empty stack"""
+
+	def __init__(self):
+		"""
+		Set the stack size, stack and stack variables
+		"""
+		self.stack = []
+		stack.append(0)
+		stack.append(0)
+
+	def push(self, item):
+		"""
+		Push the item to the top of the stack
+		"""
+		self.stack.append(item)
+```
 
 Laptick-1 doesn't know it is Laptick. Nothing it has read so far is about itself.
 
