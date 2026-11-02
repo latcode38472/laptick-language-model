@@ -8,14 +8,14 @@ Laptick is not related to [laptick.com](https://www.laptick.com/), an AI laptop 
 
 ## Status
 
-Last updated: 2026-11-01.
+Last updated: 2026-11-02.
 
 | | |
 |---|---|
 | **Stage** | Laptick-1 pretraining, main run |
-| **Progress** | Step 24,350 of 48,066 (50.7%) |
-| **Tokens read** | 3.19 billion |
-| **Validation loss (English)** | 2.9387, the lowest so far (step 24,000) |
+| **Progress** | Step 26,301 of 48,066 (54.7%) |
+| **Tokens read** | 3.44 billion |
+| **Validation loss (English)** | 2.9205, the lowest so far (step 26,000) |
 
 Laptick-1 has passed the halfway point of its main run. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
 
