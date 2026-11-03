@@ -8,18 +8,18 @@ Laptick is not related to [laptick.com](https://www.laptick.com/), an AI laptop 
 
 ## Status
 
-Last updated: 2026-11-02.
+Last updated: 2026-11-03.
 
 | | |
 |---|---|
 | **Stage** | Laptick-1 pretraining, main run |
-| **Progress** | Step 26,301 of 48,066 (54.7%) |
-| **Tokens read** | 3.44 billion |
-| **Validation loss (English)** | 2.9205, the lowest so far (step 26,000) |
+| **Progress** | Step 28,620 of 48,066 (59.5%) |
+| **Tokens read** | 3.75 billion |
+| **Validation loss (English)** | 2.8982, the lowest so far (step 28,500) |
 
-Laptick-1 has passed the halfway point of its main run. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
+Laptick-1 is almost 60% through its main run, and its validation loss has dropped below 2.9 for the first time. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
 
-In the latest repetition check, none of 100 samples got stuck in a loop, down from 5 at step 16,982. It still repeats four-word phrases more than real text does, though that comparison is only rough.
+In the latest repetition check (step 24,350), none of 100 samples got stuck in a loop, down from 5 at step 16,982. It still repeats four-word phrases more than real text does, though that comparison is only rough.
 
 ## Samples
 
