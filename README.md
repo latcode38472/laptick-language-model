@@ -13,7 +13,7 @@ Last updated: 2026-11-03.
 | | |
 |---|---|
 | **Stage** | Laptick-1 pretraining, main run |
-| **Progress** | Step 28,620 of 48,066 (59.5%) |
+| **Progress** | Step 28,640 of 48,066 (59.6%) |
 | **Tokens read** | 3.75 billion |
 | **Validation loss (English)** | 2.8982, the lowest so far (step 28,500) |
 
@@ -23,40 +23,57 @@ In the latest repetition check (step 24,350), none of 100 samples got stuck in a
 
 ## Samples
 
-These are raw outputs from step 24,350, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
+These are raw outputs from step 28,640, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
 
 Sometimes it does well:
 
-> **The best way to learn a new language is** to practice. If you are struggling, try practicing a new language with a native speaker. This will help you to pick up a new vocabulary and learn to speak it.
+> **The best way to learn a new language is** to do it. This is true whether you’re learning a language you’ve never spoken before, or you want to get a better grasp on how the language works.
 
 Often it doesn't:
 
-> **The sun is a star that** emits light from its core, which is the outermost part of our sun, also known as the sun.
+> **The sun is a star that** is the center of our universe. The sun was once a huge, bright ball of fire. [...] The sun does not emit any heat.
 
-> **ChatGPT is** an AI tool that has been used to generate text. [...] It is a language model used for text generation in ChatGPT. It is a language model that is used for text generation in ChatGPT.
+> **ChatGPT is** a tool developed by Google that allows users to create and share document-based content [...] It is intended for use with the Microsoft Office suite of operating systems and a variety of other applications, and is available as an open-source software package and freeware.
 
 > **Q: What is your name?**
-> **A:** My name is Robert and I am one of the most trusted people in the world!
+> **A:** What’s your house?
+> A: And why do I call it the house of his teeth?
 
-Its Python looks right at first glance, but it often wouldn't run. Given `class Stack:`, it wrote this, and `stack.append(0)` would crash because `stack` was never defined:
+It still gets stuck in loops sometimes. Given the same question with another seed, it listed made-up children and then wrote:
+
+> [...] I am not sure why. I am thinking of something else. I am not sure why. I am thinking of something else.
+
+Its Python has improved. At step 24,350, `class Stack:` led to code that would crash. This time it wrote a stack that would work:
 
 ```python
 class Stack:
-	"""An empty stack"""
-
 	def __init__(self):
-		"""
-		Set the stack size, stack and stack variables
-		"""
 		self.stack = []
-		stack.append(0)
-		stack.append(0)
 
-	def push(self, item):
-		"""
-		Push the item to the top of the stack
-		"""
+	def isEmpty(self):
+		return self.stack == []
+
+	def push(self,item):
 		self.stack.append(item)
+
+	def pop(self):
+		return self.stack.pop()
+
+	def display(self):
+		print(self.stack)
+```
+
+Its logic still slips, though. Given `def is_prime(n):`, it wrote a check that says 3 isn't prime and 4 is:
+
+```python
+def is_prime(n):
+	if n == 1 or n == 0:
+		return False
+	if n == 2:
+		return True
+	if n % 3 == 0 or n % 5 == 0:
+		return False
+	return True
 ```
 
 Laptick-1 doesn't know it is Laptick. Nothing it has read so far is about itself.
