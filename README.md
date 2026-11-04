@@ -8,73 +8,82 @@ Laptick is not related to [laptick.com](https://www.laptick.com/), an AI laptop 
 
 ## Status
 
-Last updated: 2026-11-03.
+Last updated: 2026-11-04.
 
 | | |
 |---|---|
 | **Stage** | Laptick-1 pretraining, main run |
-| **Progress** | Step 28,640 of 48,066 (59.6%) |
-| **Tokens read** | 3.75 billion |
-| **Validation loss (English)** | 2.8982, the lowest so far (step 28,500) |
+| **Progress** | Step 30,075 of 48,066 (62.6%) |
+| **Tokens read** | 3.94 billion |
+| **Validation loss (English)** | 2.8829, the lowest so far (step 30,000) |
 
-Laptick-1 is almost 60% through its main run, and its validation loss has dropped below 2.9 for the first time. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
+Laptick-1 is more than 60% through its main run, and its validation loss keeps reaching new lows. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
 
 In the latest repetition check (step 24,350), none of 100 samples got stuck in a loop, down from 5 at step 16,982. It still repeats four-word phrases more than real text does, though that comparison is only rough.
 
 ## Samples
 
-These are raw outputs from step 28,640, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
+These are raw outputs from step 30,075, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
 
 Sometimes it does well:
 
-> **The best way to learn a new language is** to do it. This is true whether you’re learning a language you’ve never spoken before, or you want to get a better grasp on how the language works.
+> **The best way to learn a new language is** to do it right. In the process, you will acquire new vocabulary, new idioms and new ways of thinking, understanding and using language.
 
 Often it doesn't:
 
-> **The sun is a star that** is the center of our universe. The sun was once a huge, bright ball of fire. [...] The sun does not emit any heat.
+> **The sun is a star that** is a hot spot of star formation. It is a hot spot in the northern hemisphere, especially in winter. It gives the sun its name.
 
-> **ChatGPT is** a tool developed by Google that allows users to create and share document-based content [...] It is intended for use with the Microsoft Office suite of operating systems and a variety of other applications, and is available as an open-source software package and freeware.
+> **ChatGPT is** a deep learning program developed by Google and used for text-messaging applications. It is based on the popular PNLP (Precision NLP) system developed by MIT.
 
 > **Q: What is your name?**
-> **A:** What’s your house?
-> A: And why do I call it the house of his teeth?
+> **A:** I am my name, John.
 
-It still gets stuck in loops sometimes. Given the same question with another seed, it listed made-up children and then wrote:
+It still repeats itself. The sun answer above went on:
 
-> [...] I am not sure why. I am thinking of something else. I am not sure why. I am thinking of something else.
+> What is a hot spot? A hot spot is a place where a large number of stars are forming. What is a hot spot star? A hot spot star is a place where a large number of stars are forming.
 
-Its Python has improved. At step 24,350, `class Stack:` led to code that would crash. This time it wrote a stack that would work:
+Its Python is getting better. Given `class BankAccount:`, it wrote a class that would work, though nothing stops the balance from going below zero:
 
 ```python
-class Stack:
-	def __init__(self):
-		self.stack = []
+class BankAccount:
+	def __init__(self, owner, balance):
+		self.owner = owner
+		self.balance = balance
 
-	def isEmpty(self):
-		return self.stack == []
+	def deposit(self, amount):
+		self.balance += amount
+		return self
 
-	def push(self,item):
-		self.stack.append(item)
-
-	def pop(self):
-		return self.stack.pop()
+	def withdraw(self, amount):
+		self.balance -= amount
+		return self
 
 	def display(self):
-		print(self.stack)
+		print("Balance: $%d" % self.balance)
 ```
 
-Its logic still slips, though. Given `def is_prime(n):`, it wrote a check that says 3 isn't prime and 4 is:
+Its logic still slips, though. Given `def is_prime(n):`, one sample wrote a check that returns False for every number, so its own loop finds no primes below 1,000. The `n == 9` line can never run:
 
 ```python
 def is_prime(n):
-	if n == 1 or n == 0:
+	if n == 1 or n == 2:
 		return False
-	if n == 2:
+	if n & 1 == 0:
+		return False
+	if n != 2:
+		return False
+	if n == 9:
 		return True
-	if n % 3 == 0 or n % 5 == 0:
-		return False
 	return True
+
+count = 0
+for i in range(1, 1000):
+	if is_prime(i):
+		count+=1
+print(count)
 ```
+
+With another seed, it wrote a correct one.
 
 Laptick-1 doesn't know it is Laptick. Nothing it has read so far is about itself.
 
