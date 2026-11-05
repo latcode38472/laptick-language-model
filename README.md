@@ -19,7 +19,7 @@ Last updated: 2026-11-05.
 
 Laptick-1 has now read more than 4 billion tokens, two-thirds of its main run, and its validation loss keeps reaching new lows. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
 
-In the latest repetition check (step 24,350), none of 100 samples got stuck in a loop, down from 5 at step 16,982. It still repeats four-word phrases more than real text does, though that comparison is only rough.
+In our fixed repetition test at step 32,278, a token-loop detector flagged 1 of 100 completions, each capped at 128 new tokens. The average share of repeated four-word sequences was 4.6%, the lowest across our five checks so far. An unmatched reference from training text gave 1.6%, so that comparison is only rough.
 
 ## Samples
 
