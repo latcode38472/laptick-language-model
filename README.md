@@ -8,82 +8,76 @@ Laptick is not related to [laptick.com](https://www.laptick.com/), an AI laptop 
 
 ## Status
 
-Last updated: 2026-11-04.
+Last updated: 2026-11-05.
 
 | | |
 |---|---|
 | **Stage** | Laptick-1 pretraining, main run |
-| **Progress** | Step 30,075 of 48,066 (62.6%) |
-| **Tokens read** | 3.94 billion |
-| **Validation loss (English)** | 2.8829, the lowest so far (step 30,000) |
+| **Progress** | Step 32,278 of 48,066 (67.2%) |
+| **Tokens read** | 4.23 billion |
+| **Validation loss (English)** | 2.8640, the lowest so far (step 32,000) |
 
-Laptick-1 is more than 60% through its main run, and its validation loss keeps reaching new lows. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
+Laptick-1 has now read more than 4 billion tokens, two-thirds of its main run, and its validation loss keeps reaching new lows. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
 
 In the latest repetition check (step 24,350), none of 100 samples got stuck in a loop, down from 5 at step 16,982. It still repeats four-word phrases more than real text does, though that comparison is only rough.
 
 ## Samples
 
-These are raw outputs from step 30,075, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
+These are raw outputs from step 32,278, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
 
 Sometimes it does well:
 
-> **The best way to learn a new language is** to do it right. In the process, you will acquire new vocabulary, new idioms and new ways of thinking, understanding and using language.
+> **The best way to learn a new language is** to pick up the language itself. This means learning about the basics of the language itself, and learning basic phrases and words to get a better grasp of how the language works.
+
+> **Photosynthesis is the process by which** plants use sunlight to convert carbon dioxide (CO2) into organic compounds; this is accomplished by two mechanisms.
 
 Often it doesn't:
 
-> **The sun is a star that** is a hot spot of star formation. It is a hot spot in the northern hemisphere, especially in winter. It gives the sun its name.
+> **The sun is a star that** is a type of star that has no planets or life. Its position on the solar system is directly proportional to its distance from the sun. The sun emits ultraviolet rays that are absorbed by the atmosphere. It is made of three metal atoms, with the first element being hydrogen, the second element is carbon and the third element is oxygen.
 
-> **ChatGPT is** a deep learning program developed by Google and used for text-messaging applications. It is based on the popular PNLP (Precision NLP) system developed by MIT.
+> **ChatGPT is** a deep learning model developed in April 2015 by Google DeepMind to help improve the learning experience.
+
+> **ChatGPT is** a ChatGPT application that allows users to create and share documentaries.
 
 > **Q: What is your name?**
-> **A:** I am my name, John.
+> **A:** I am a woman, and a woman has two names. One is my name, and the other her name.
 
-It still repeats itself. The sun answer above went on:
+It still repeats itself. The photosynthesis answer above went on:
 
-> What is a hot spot? A hot spot is a place where a large number of stars are forming. What is a hot spot star? A hot spot star is a place where a large number of stars are forming.
+> Photosynthesis is the process by which plants use sunlight to convert carbon dioxide (CO2) into organic compounds, such as sugars, amino acids, and fatty acids. Photosynthesis is the process by which plants use sunlight to convert carbon dioxide into organic compounds, such as sugars, amino acids, and fatty acids.
 
-Its Python is getting better. Given `class BankAccount:`, it wrote a class that would work, though nothing stops the balance from going below zero:
+Its Python is mixed. Given `class BankAccount:`, one sample stored deposits in the owner's age, so putting money in makes you older:
 
 ```python
 class BankAccount:
-	def __init__(self, owner, balance):
+	def __init__(self, owner, age):
 		self.owner = owner
-		self.balance = balance
+		self.age = age
 
 	def deposit(self, amount):
-		self.balance += amount
-		return self
+		self.age += amount
 
-	def withdraw(self, amount):
-		self.balance -= amount
-		return self
-
-	def display(self):
-		print("Balance: $%d" % self.balance)
+	def get_account_info(self):
+		return self.age
 ```
 
-Its logic still slips, though. Given `def is_prime(n):`, one sample wrote a check that returns False for every number, so its own loop finds no primes below 1,000. The `n == 9` line can never run:
+With another seed, its `withdraw` checked that the balance was big enough, then returned without taking any money out.
+
+Its prime checks are getting better. Given `def is_prime(n):`, both samples tried every possible divisor. This one is right for every positive whole number:
 
 ```python
 def is_prime(n):
-	if n == 1 or n == 2:
+	if n == 1:
 		return False
-	if n & 1 == 0:
-		return False
-	if n != 2:
-		return False
-	if n == 9:
-		return True
-	return True
+	else:
+		for v in range(2,n):
+			if n % v == 0:
+				return False
 
-count = 0
-for i in range(1, 1000):
-	if is_prime(i):
-		count+=1
-print(count)
+		return True
 ```
 
-With another seed, it wrote a correct one.
+The other called 1 a prime number. At step 30,075, one of the two samples returned False for every number.
 
 Laptick-1 doesn't know it is Laptick. Nothing it has read so far is about itself.
 
