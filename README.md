@@ -8,45 +8,70 @@ Laptick is not related to [laptick.com](https://www.laptick.com/), an AI laptop 
 
 ## Status
 
-Last updated: 2026-11-05.
+Last updated: 2026-11-06.
 
 | | |
 |---|---|
 | **Stage** | Laptick-1 pretraining, main run |
-| **Progress** | Step 32,278 of 48,066 (67.2%) |
-| **Tokens read** | 4.23 billion |
-| **Validation loss (English)** | 2.8640, the lowest so far (step 32,000) |
+| **Progress** | Step 34,112 of 48,066 (71.0%) |
+| **Tokens read** | 4.47 billion |
+| **Validation loss (English)** | 2.8464, the lowest so far (step 34,000) |
 
-Laptick-1 has now read more than 4 billion tokens, two-thirds of its main run, and its validation loss keeps reaching new lows. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
+Laptick-1 is now more than 70% through its main run, and its validation loss keeps reaching new lows. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
 
 In our fixed repetition test at step 32,278, a token-loop detector flagged 1 of 100 completions, each capped at 128 new tokens. The average share of repeated four-word sequences was 4.6%, the lowest across our five checks so far. An unmatched reference from training text gave 1.6%, so that comparison is only rough.
 
 ## Samples
 
-These are raw outputs from step 32,278, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
+These are raw outputs from step 34,112, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
 
 Sometimes it does well:
 
-> **The best way to learn a new language is** to pick up the language itself. This means learning about the basics of the language itself, and learning basic phrases and words to get a better grasp of how the language works.
+> **The best way to learn a new language is** to do it. This is a skill that will help you to become an effective communicator. You must study the language to get a better grasp of it. Besides, you must also practice the language regularly to improve your fluency.
 
-> **Photosynthesis is the process by which** plants use sunlight to convert carbon dioxide (CO2) into organic compounds; this is accomplished by two mechanisms.
+> **ChatGPT is** a deep text analysis engine developed by OpenAI for text-based language modelling.
 
 Often it doesn't:
 
-> **The sun is a star that** is a type of star that has no planets or life. Its position on the solar system is directly proportional to its distance from the sun. The sun emits ultraviolet rays that are absorbed by the atmosphere. It is made of three metal atoms, with the first element being hydrogen, the second element is carbon and the third element is oxygen.
+> **ChatGPT is** a tool developed at MIT that allows users to create and share documentaries, blogs, videos, or poems.
 
-> **ChatGPT is** a deep learning model developed in April 2015 by Google DeepMind to help improve the learning experience.
-
-> **ChatGPT is** a ChatGPT application that allows users to create and share documentaries.
+> **The sun is a star that** is a bright source of energy for everything from the formation of our planet to our deep-sea dwelling. Because the sun is so bright it can be seen in the night sky, and even on a cool summer evenings, you can see the sun in the sky as well.
 
 > **Q: What is your name?**
-> **A:** I am a woman, and a woman has two names. One is my name, and the other her name.
+> **A:** “John Adams, Founder of the United States of America.”
+> John Adams (December 28, 1735 – April 4, 1800), son of John Adams and Dorothea Monroe, was the second U.S. president from 1800-1801 and served as the first tenor of the U.S. presidential election of 1800.
 
-It still repeats itself. The photosynthesis answer above went on:
+The real John Adams was president from 1797 to 1801, and the sample's other dates and his mother's name are wrong too.
 
-> Photosynthesis is the process by which plants use sunlight to convert carbon dioxide (CO2) into organic compounds, such as sugars, amino acids, and fatty acids. Photosynthesis is the process by which plants use sunlight to convert carbon dioxide into organic compounds, such as sugars, amino acids, and fatty acids.
+It still repeats itself:
 
-Its Python is mixed. Given `class BankAccount:`, one sample stored deposits in the owner's age, so putting money in makes you older:
+> **Once upon a time, there was a little girl who** wanted to have some fun. And she had to go buy some stuff from the supermarket. She was going to spend some time at the shopping mall. And she was going to buy some stuff at the supermarket. And she was going to go buy some stuff at the shopping mall. And she was going to buy some stuff from the supermarket. And she was going to buy some stuff from the shopping mall.
+
+Its Python is mixed. Given `class Stack:`, one sample wrote a stack whose `pop` removes the top item but doesn't return it:
+
+```python
+class Stack:
+	def __init__(self):
+		self.stack=[]
+	def push(self, data):
+		self.stack.append(data)
+	
+	def pop(self):
+		self.stack.pop()
+	
+	def peek(self):
+		return self.stack[-1]
+	
+	def isEmpty(self):
+		return self.stack == []
+	
+	def size(self):
+		return len(self.stack)
+```
+
+The other sample named its list `queue`, and its `peek` checks whether the stack is empty, then does the same thing either way.
+
+Given `class BankAccount:`, one sample keeps the money in the owner's age, as one did at step 32,278. This time it also has a `withdraw`, so taking money out makes you younger:
 
 ```python
 class BankAccount:
@@ -56,28 +81,26 @@ class BankAccount:
 
 	def deposit(self, amount):
 		self.age += amount
+		return self
 
-	def get_account_info(self):
-		return self.age
+	def withdraw(self, amount):
+		self.age -= amount
+		return self
 ```
 
-With another seed, its `withdraw` checked that the balance was big enough, then returned without taking any money out.
+The other uses a real balance, but its `withdraw` takes the money out without checking that there is enough. At step 32,278, one sample's `withdraw` did the reverse: it checked the balance, then took nothing out.
 
-Its prime checks are getting better. Given `def is_prime(n):`, both samples tried every possible divisor. This one is right for every positive whole number:
+Given `def is_prime(n):`, one sample tried every possible divisor. It is right for every whole number from 2 up, but it calls 0 and 1 prime. This is the whole sample; the model stopped there by itself:
 
 ```python
 def is_prime(n):
-	if n == 1:
-		return False
-	else:
-		for v in range(2,n):
-			if n % v == 0:
-				return False
-
-		return True
+	for z in range(2,n):
+		if (n % z == 0):
+			return False
+	return True
 ```
 
-The other called 1 a prime number. At step 30,075, one of the two samples returned False for every number.
+The other only tested 2 and 3 as divisors, so it calls 25 prime and says 2 and 3 aren't. Its comment says numbers divisible by 2 or 3 are prime, while its code returns False for them.
 
 Laptick-1 doesn't know it is Laptick. Nothing it has read so far is about itself.
 
