@@ -8,69 +8,79 @@ Laptick is not related to [laptick.com](https://www.laptick.com/), an AI laptop 
 
 ## Status
 
-Last updated: 2026-11-07.
+Last updated: 2026-11-08.
 
 | | |
 |---|---|
 | **Stage** | Laptick-1 pretraining, main run |
-| **Progress** | Step 35,988 of 48,066 (74.9%) |
-| **Tokens read** | 4.71 billion |
-| **Validation loss (English)** | 2.8348, the lowest so far (step 35,500) |
+| **Progress** | Step 38,869 of 48,066 (80.9%) |
+| **Tokens read** | 5.09 billion |
+| **Validation loss (English)** | 2.8122, the lowest so far (step 38,500) |
 
-Laptick-1 is now almost three-quarters of the way through its main run, and its validation loss keeps reaching new lows. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
+Laptick-1 has now read more than 5 billion tokens, over 80% of its main run, and its validation loss keeps reaching new lows. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
 
 In our fixed repetition test at step 32,278, a token-loop detector flagged 1 of 100 completions, each capped at 128 new tokens. The average share of repeated four-word sequences was 4.6%, the lowest across our five checks so far. An unmatched reference from training text gave 1.6%, so that comparison is only rough.
 
 ## Samples
 
-These are raw outputs from step 35,988, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
+These are raw outputs from step 38,869, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
 
 Sometimes it does well:
 
-> **The best way to learn a new language is** to begin listening to people, other people, and literature. Even though there are many different ways to learn a foreign language, most people start out by working out how to speak the language with the other person.
-
-> **Photosynthesis is the process by which** plants obtain energy from light.
+> **The best way to learn a new language is** to begin listening to people speak. This is the easiest way to learn a language. It is also one of the most effective ways to learn a language as you study. In fact, it is a natural part of learning a language.
 
 Often it doesn't:
 
 > **ChatGPT is** a tool developed by Google that allows users to create and share documentaries.
 
-Both ChatGPT samples at this step said Google made it, and this is the third update in a row where the model says ChatGPT is for making documentaries.
+This is the fourth update in a row where the model says ChatGPT is for making documentaries. The other ChatGPT sample at this step said OpenAI made it.
 
-> **The sun is a star that** is a type of star that has no planets to stand on. Sun has two types of stars. The first type, the Sun Star, is a type of star that has one sun in the center.
+> **Photosynthesis is the process by which** plants use sunlight to convert carbon dioxide (CO2) into organic compounds; this is the process humans use to survive, not just breathe.
+> The science of photosynthesis is pretty simple. The carbon dioxide that we breathe is made up of two carbon atoms and one oxygen atom.
+
+It wrote CO2 itself, then got the atoms the wrong way round: carbon dioxide has one carbon atom and two oxygen atoms.
 
 > **Q: What is your name?**
-> **A:** I am a pharmacist, and I am the only physician in the family.
+> **A:** I am a student in the Department of Physics and Astronomy.
+> Q: Can you tell me something about the physics of light?
+> A: Light can be defined as light that has a wavelength in the range of 980 nanometers to 1800 nanometers.
+
+Visible light is about 380 to 750 nanometers.
 
 It still repeats itself:
 
-> **Photosynthesis is the process by which** plants convert sunlight into plant energy. This process is an important part of photosynthesis because it allows plants to make their own food through photosynthesis.
-> The process of photosynthesis can be broken down into three major components: photosynthesis, chloroplasts, and chloroplasts.
+> **The sun is a star that** is hot all year round. And no wonder; it’s a perfect time to celebrate!
+> Here are some fun ways to celebrate the sun, and some fun ways to celebrate the sun.
 
-Its Python is still mixed, but some of it now works. Given `class BankAccount:`, one sample wrote a `withdraw` that only takes money out when there is enough:
+Its Python is still mixed. One prime check now only tries divisors up to the square root of n, a standard speed-up:
+
+```python
+def is_prime(n):
+	for z in range(2,int(n**0.5)+1):
+		if n % z == 0:
+			return False
+	return True
+```
+
+It is right for every whole number from 2 up, but it calls 0 and 1 prime. The function it wrote next, `sum_primes`, collects the primes but never adds them up. The other sample's prime check tries every divisor and is right for every positive whole number, but its next function, `get_prime_factors`, returns `[2, n, 1]` for every number.
+
+Given `class BankAccount:`, one sample checks your balance by counting the digits of your account number:
 
 ```python
 class BankAccount:
-	def __init__(self, int_rate, balance=0):
-		self.int_rate = int_rate
+	def __init__(self, accountNumber, balance):
+		self.accountNumber = accountNumber
 		self.balance = balance
 
-	def deposit(self, value):
-		self.balance += value
-		return self
-
-	def withdraw(self, value):
-		if self.balance - value >= 0:
-			self.balance -= value
+	def checkBalance(self):
+		if len(str(self.accountNumber)) == 10:
+			print('your balance is less than or equal to 10')
+			return False
 		else:
-			print("Insufficient Funds")
+			return True
 ```
 
-The other sample at this step has a `deposit` that checks whether you already have at least that much before adding it. In earlier updates, its `withdraw`s were broken: at step 32,278 one checked the balance, then took nothing out, and at step 34,112 one took money out without checking.
-
-Given `class Stack:`, one sample named its list `queue`, and it really is a queue: its `pop` takes out the oldest item instead of the newest. The other wrote its comments in Chinese.
-
-Given `def is_prime(n):`, both samples tried every possible divisor. One is right for every positive whole number, and the other calls 1 prime, the same result as at step 32,278.
+The other sample stores the owner's age in the account, as samples at steps 32,278 and 34,112 did. Those put deposits into the age, but this one puts them into the balance.
 
 Laptick-1 doesn't know it is Laptick. Nothing it has read so far is about itself.
 
