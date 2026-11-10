@@ -8,79 +8,81 @@ Laptick is not related to [laptick.com](https://www.laptick.com/), an AI laptop 
 
 ## Status
 
-Last updated: 2026-11-08.
+Last updated: 2026-11-10.
 
 | | |
 |---|---|
 | **Stage** | Laptick-1 pretraining, main run |
-| **Progress** | Step 38,869 of 48,066 (80.9%) |
-| **Tokens read** | 5.09 billion |
-| **Validation loss (English)** | 2.8122, the lowest so far (step 38,500) |
+| **Progress** | Step 42,646 of 48,066 (88.7%) |
+| **Tokens read** | 5.58 billion |
+| **Validation loss (English)** | 2.7890, the lowest so far (step 42,500) |
 
-Laptick-1 has now read more than 5 billion tokens, over 80% of its main run, and its validation loss keeps reaching new lows. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
+Laptick-1 is now almost 89% of the way through its main run, and its validation loss has dropped below 2.8 for the first time. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
 
 In our fixed repetition test at step 32,278, a token-loop detector flagged 1 of 100 completions, each capped at 128 new tokens. The average share of repeated four-word sequences was 4.6%, the lowest across our five checks so far. An unmatched reference from training text gave 1.6%, so that comparison is only rough.
 
 ## Samples
 
-These are raw outputs from step 38,869, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
+These are raw outputs from step 42,646, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
 
 Sometimes it does well:
 
-> **The best way to learn a new language is** to begin listening to people speak. This is the easiest way to learn a language. It is also one of the most effective ways to learn a language as you study. In fact, it is a natural part of learning a language.
+> **The best way to learn a new language is** to begin listening to people speak other languages. In fact, a growing body of research suggests that learning foreign languages not only improves your cognitive ability but also helps you to be more creative and innovative.
+
+> **ChatGPT is** a tool developed by OpenAI. It is designed to make artificial intelligence work more naturally by providing humans with natural answers to questions, and helping to develop new applications and services that humans can use to improve their lives.
+
+In the last four updates, the model said ChatGPT was for making documentaries. At this step, both ChatGPT samples say OpenAI developed it, and neither mentions documentaries.
 
 Often it doesn't:
 
-> **ChatGPT is** a tool developed by Google that allows users to create and share documentaries.
+> **Photosynthesis is the process by which** plants use sunlight to convert carbon dioxide (CO2) into glucose (O2), the principal energy source for all living cells, and oxygen (O2).
 
-This is the fourth update in a row where the model says ChatGPT is for making documentaries. The other ChatGPT sample at this step said OpenAI made it.
-
-> **Photosynthesis is the process by which** plants use sunlight to convert carbon dioxide (CO2) into organic compounds; this is the process humans use to survive, not just breathe.
-> The science of photosynthesis is pretty simple. The carbon dioxide that we breathe is made up of two carbon atoms and one oxygen atom.
-
-It wrote CO2 itself, then got the atoms the wrong way round: carbon dioxide has one carbon atom and two oxygen atoms.
+That is close, but it gives glucose the formula for oxygen. Glucose is C6H12O6.
 
 > **Q: What is your name?**
-> **A:** I am a student in the Department of Physics and Astronomy.
-> Q: Can you tell me something about the physics of light?
-> A: Light can be defined as light that has a wavelength in the range of 980 nanometers to 1800 nanometers.
+> **A:** I am a woman, and I am from the United States, but I’m from Spain, and I’m also from France. I’m from Russia.
 
-Visible light is about 380 to 750 nanometers.
+It was asked for its name and started by saying it is from four different countries. The other sample for this prompt got stuck asking “What’s your job?” and answering “My job.”
 
 It still repeats itself:
 
-> **The sun is a star that** is hot all year round. And no wonder; it’s a perfect time to celebrate!
-> Here are some fun ways to celebrate the sun, and some fun ways to celebrate the sun.
+> **The sun is a star that** is a constant source of energy for everything. In fact, it is one of the most important elements in the world. It is a source of energy for the Sun. In fact, it is a source of light. This is because it is an important source of energy for the Sun. In fact, it is a source of energy for the Sun.
 
-Its Python is still mixed. One prime check now only tries divisors up to the square root of n, a standard speed-up:
+Its Python is still mixed. One prime check only tries divisors up to the square root of n, a standard speed-up, and it gives the right answer for 0 and 1:
 
 ```python
 def is_prime(n):
-	for z in range(2,int(n**0.5)+1):
-		if n % z == 0:
+	if n < 2:
+		return False
+	for i in range(2, int(n**0.5+1)):
+		if n % i == 0:
 			return False
 	return True
 ```
 
-It is right for every whole number from 2 up, but it calls 0 and 1 prime. The function it wrote next, `sum_primes`, collects the primes but never adds them up. The other sample's prime check tries every divisor and is right for every positive whole number, but its next function, `get_prime_factors`, returns `[2, n, 1]` for every number.
+The other sample's prime check still calls 0 and 1 prime, as the one shown at step 38,869 did. The function it wrote next, `sum_squares`, adds up `i*(i+1)**2` instead of squares.
 
-Given `class BankAccount:`, one sample checks your balance by counting the digits of your account number:
+One `Stack` class has a working `push`, `pop` and `isEmpty`, but its `peek` calls `pop()`, so looking at the top item removes it. The other `Stack` has its `push` commented out.
+
+Given `class BankAccount:`, one sample has no balance at all. It shows the account number as the balance and adds money to the account number:
 
 ```python
 class BankAccount:
-	def __init__(self, accountNumber, balance):
+	def __init__(self, accountNumber, rate):
 		self.accountNumber = accountNumber
-		self.balance = balance
+		self.rate = rate
 
 	def checkBalance(self):
-		if len(str(self.accountNumber)) == 10:
-			print('your balance is less than or equal to 10')
-			return False
+		print('Balance: ', self.accountNumber)
+
+	def setBalance(self, balance):
+		if balance >= 0:
+			self.accountNumber += balance
 		else:
-			return True
+			print('Balance must be greater than 0')
 ```
 
-The other sample stores the owner's age in the account, as samples at steps 32,278 and 34,112 did. Those put deposits into the age, but this one puts them into the balance.
+The other sample stores the owner's age in the account, as samples at steps 32,278, 34,112 and 38,869 did. Its deposits go into `self.money`, which it never created, so the first deposit would fail.
 
 Laptick-1 doesn't know it is Laptick. Nothing it has read so far is about itself.
 
