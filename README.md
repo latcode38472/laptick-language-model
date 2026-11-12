@@ -8,81 +8,95 @@ Laptick is not related to [laptick.com](https://www.laptick.com/), an AI laptop 
 
 ## Status
 
-Last updated: 2026-11-10.
+Last updated: 2026-11-12.
 
 | | |
 |---|---|
 | **Stage** | Laptick-1 pretraining, main run |
-| **Progress** | Step 42,646 of 48,066 (88.7%) |
-| **Tokens read** | 5.58 billion |
-| **Validation loss (English)** | 2.7890, the lowest so far (step 42,500) |
+| **Progress** | Step 44,770 of 48,066 (93.1%) |
+| **Tokens read** | 5.86 billion |
+| **Validation loss (English)** | 2.7805, the lowest so far (step 44,500) |
 
-Laptick-1 is now almost 89% of the way through its main run, and its validation loss has dropped below 2.8 for the first time. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
+Laptick-1 is now over 93% of the way through its main run, and its validation loss is still falling: every one of the last ten checks set a new low. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
 
 In our fixed repetition test at step 32,278, a token-loop detector flagged 1 of 100 completions, each capped at 128 new tokens. The average share of repeated four-word sequences was 4.6%, the lowest across our five checks so far. An unmatched reference from training text gave 1.6%, so that comparison is only rough.
 
 ## Samples
 
-These are raw outputs from step 42,646, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
+These are raw outputs from step 44,770, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
 
 Sometimes it does well:
 
-> **The best way to learn a new language is** to begin listening to people speak other languages. In fact, a growing body of research suggests that learning foreign languages not only improves your cognitive ability but also helps you to be more creative and innovative.
+> **The best way to learn a new language is** to do it right. In this video, we'll show you a few tips to get you started. This video gives you a great overview of the language and will take you through the process of learning how to speak and write the language.
 
-> **ChatGPT is** a tool developed by OpenAI. It is designed to make artificial intelligence work more naturally by providing humans with natural answers to questions, and helping to develop new applications and services that humans can use to improve their lives.
+It mixes real facts with made-up ones:
 
-In the last four updates, the model said ChatGPT was for making documentaries. At this step, both ChatGPT samples say OpenAI developed it, and neither mentions documentaries.
+> **ChatGPT is** a Chatbot created by OpenAI. It was developed in 2016 in response to a question from AI. ChatGPT is a great language model that can improve the effectiveness of humans by talking to humans.
 
-Often it doesn't:
+OpenAI is right, and both ChatGPT samples have now said so for two updates in a row. The year is made up: ChatGPT came out in 2022. The other sample said 2013.
 
-> **Photosynthesis is the process by which** plants use sunlight to convert carbon dioxide (CO2) into glucose (O2), the principal energy source for all living cells, and oxygen (O2).
+> **Photosynthesis is the process by which** plants convert light energy into chemical energy and this conversion process is controlled by an enzyme called chlorophyll.
 
-That is close, but it gives glucose the formula for oxygen. Glucose is C6H12O6.
+The first half is right, but chlorophyll is a pigment that absorbs light, not an enzyme. The other sample said that plants and animals both do it.
 
-> **Q: What is your name?**
-> **A:** I am a woman, and I am from the United States, but I’m from Spain, and I’m also from France. I’m from Russia.
+Sometimes it loses the thread:
 
-It was asked for its name and started by saying it is from four different countries. The other sample for this prompt got stuck asking “What’s your job?” and answering “My job.”
+> **Q: What is your name?**\
+> **A:** What’s your house?\
+> Q: Where is your dad?\
+> A: My parents are both in the US.\
+> Q: What is your mother’s name?\
+> A: My mom works at a big company.\
+> Q: What’s your name?\
+> Q: What’s your name?\
+> A: It was “R.V.”\
+> Q: What does your name mean?\
+> A: It is a nickname for your name.
+
+It answered the question with another question and then kept interviewing itself. The other sample opened with “I am a woman, and I am from the United States”, the same words as the sample shown at step 42,646, and gave no name at all.
 
 It still repeats itself:
 
-> **The sun is a star that** is a constant source of energy for everything. In fact, it is one of the most important elements in the world. It is a source of energy for the Sun. In fact, it is a source of light. This is because it is an important source of energy for the Sun. In fact, it is a source of energy for the Sun.
+> **The sun is a star that** is a hot star. In the center of the Sun, it is called the "corona". The corona, which is the corona, is the outer outer covering of the Sun. The corona is made of the Sun's visible spectrum and colors. The solar corona is the corona that is seen by most telescopes.
 
-Its Python is still mixed. One prime check only tries divisors up to the square root of n, a standard speed-up, and it gives the right answer for 0 and 1:
+That is “corona” six times in five sentences. It also puts the corona in the center of the Sun and then calls it the outer covering. The second claim is right: the corona is the Sun's outer atmosphere.
 
-```python
-def is_prime(n):
-	if n < 2:
-		return False
-	for i in range(2, int(n**0.5+1)):
-		if n % i == 0:
-			return False
-	return True
-```
-
-The other sample's prime check still calls 0 and 1 prime, as the one shown at step 38,869 did. The function it wrote next, `sum_squares`, adds up `i*(i+1)**2` instead of squares.
-
-One `Stack` class has a working `push`, `pop` and `isEmpty`, but its `peek` calls `pop()`, so looking at the top item removes it. The other `Stack` has its `push` commented out.
-
-Given `class BankAccount:`, one sample has no balance at all. It shows the account number as the balance and adds money to the account number:
+Its Python is still mixed. Given `class BankAccount:`, one sample wrote a class that works, though nothing stops the balance from going below zero:
 
 ```python
 class BankAccount:
-	def __init__(self, accountNumber, rate):
-		self.accountNumber = accountNumber
-		self.rate = rate
+	def __init__(self, account, name, balance):
+		self.account = account
+		self.name = name
+		self.balance = balance
 
-	def checkBalance(self):
-		print('Balance: ', self.accountNumber)
+	def deposit(self, amount):
+		self.balance += amount
 
-	def setBalance(self, balance):
-		if balance >= 0:
-			self.accountNumber += balance
-		else:
-			print('Balance must be greater than 0')
+	def withdraw(self, amount):
+		self.balance -= amount
+
+	def showbalance(self):
+		print(f'The account balance is {self.balance}')
 ```
 
-The other sample stores the owner's age in the account, as samples at steps 32,278, 34,112 and 38,869 did. Its deposits go into `self.money`, which it never created, so the first deposit would fail.
+The other sample stores the owner's age in the account, as samples at steps 32,278, 34,112, 38,869 and 42,646 did. As at the first two of those steps, a deposit makes the owner older:
+
+```python
+class BankAccount:
+	def __init__(self, name, age):
+		self.name = name
+		self.age = age
+
+	def deposit(self, amount):
+		self.age += amount
+```
+
+Its next method, `get_account_info`, prints `self.balance`, which it never created, so calling that method would fail.
+
+Given `class Stack:`, one sample named its list `queue` and built a queue, as one did at step 35,988: `push` adds at the front and `pop` takes from the back, so the oldest item comes out first. A stack should give back the newest. The other `Stack` has its `push` commented out, as at step 42,646.
+
+Given `def is_prime(n):`, both samples only try divisors up to the square root of n. The one that returns an answer still calls 0 and 1 prime, as samples at steps 38,869 and 42,646 did. The function it wrote next, `sum_squares`, now adds real squares, but it starts at 2 and so leaves out 1 squared. At step 42,646 it added up `i*(i+1)**2`.
 
 Laptick-1 doesn't know it is Laptick. Nothing it has read so far is about itself.
 
