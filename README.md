@@ -8,95 +8,110 @@ Laptick is not related to [laptick.com](https://www.laptick.com/), an AI laptop 
 
 ## Status
 
-Last updated: 2026-11-12.
+Last updated: 2026-11-14.
 
 | | |
 |---|---|
 | **Stage** | Laptick-1 pretraining, main run |
-| **Progress** | Step 44,770 of 48,066 (93.1%) |
-| **Tokens read** | 5.86 billion |
-| **Validation loss (English)** | 2.7805, the lowest so far (step 44,500) |
+| **Progress** | Step 46,648 of 48,066 (97.0%) |
+| **Tokens read** | 6.11 billion |
+| **Validation loss (English)** | 2.7744, the lowest so far (step 46,500) |
 
-Laptick-1 is now over 93% of the way through its main run, and its validation loss is still falling: every one of the last ten checks set a new low. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
+Laptick-1 is now 97% of the way through its main run, with about 1,400 steps to go. Its validation loss is still falling: every check so far has set a new low. It can't chat yet. It only continues text, and it makes up facts with total confidence. Chat lessons come after pretraining.
 
 In our fixed repetition test at step 32,278, a token-loop detector flagged 1 of 100 completions, each capped at 128 new tokens. The average share of repeated four-word sequences was 4.6%, the lowest across our five checks so far. An unmatched reference from training text gave 1.6%, so that comparison is only rough.
 
 ## Samples
 
-These are raw outputs from step 44,770, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
+These are raw outputs from step 46,648, cut short, with the prompt in bold. Settings: temperature 0.8, top-k 50.
 
 Sometimes it does well:
 
-> **The best way to learn a new language is** to do it right. In this video, we'll show you a few tips to get you started. This video gives you a great overview of the language and will take you through the process of learning how to speak and write the language.
+> **The best way to learn a new language is** to do it right. In this video, we'll show you a few different ways to do it. This video gives you a great example of how to improve your speed in learning a foreign language.\
+> By the end of the video, you'll be able to:\
+> • Learn French faster\
+> • Improve your pronunciation\
+> • Become more comfortable pronouncing French words\
+> • Learn the language in a more natural way\
+> • Improve your communication skills in French
+
+It began the same way at step 44,770. The French lesson is new.
 
 It mixes real facts with made-up ones:
 
-> **ChatGPT is** a Chatbot created by OpenAI. It was developed in 2016 in response to a question from AI. ChatGPT is a great language model that can improve the effectiveness of humans by talking to humans.
+> **ChatGPT is** a deep text analysis engine developed by OpenAI for text-intensive work. In this post, we will introduce you to the ChatGPT.\
+> To understand how ChatGPT works, lets first understand what ChatGPT is. ChatGPT is an open-source text-mining platform developed by OpenAI.
 
-OpenAI is right, and both ChatGPT samples have now said so for two updates in a row. The year is made up: ChatGPT came out in 2022. The other sample said 2013.
+OpenAI is right, and both ChatGPT samples have now said so for three updates in a row. The rest is made up: ChatGPT is a chatbot, not a text-mining platform, and it is not open source. Its opening words, “a deep text analysis engine developed by OpenAI”, are the same as in a sample at step 34,112. The other sample called it a tool “for the self-learning of artificial intelligence”.
 
-> **Photosynthesis is the process by which** plants convert light energy into chemical energy and this conversion process is controlled by an enzyme called chlorophyll.
+> **Photosynthesis is the process by which** plants convert light energy into energy for the life of the plant.\
+> The process of photosynthesis is very simple: the plants absorb water and light.\
+> To do this, plants use a part of the carbon dioxide in the air as a source of energy.\
+> A molecule of glucose is made by the body through photosynthesis.
 
-The first half is right, but chlorophyll is a pigment that absorbs light, not an enzyme. The other sample said that plants and animals both do it.
+Light, water, carbon dioxide and glucose all belong here, but the energy comes from the light. The carbon dioxide supplies the carbon. The other sample put photosynthesis in the chloroplasts, which is right, but counted carbon dioxide among “organic compounds”.
 
 Sometimes it loses the thread:
 
 > **Q: What is your name?**\
 > **A:** What’s your house?\
-> Q: Where is your dad?\
-> A: My parents are both in the US.\
-> Q: What is your mother’s name?\
-> A: My mom works at a big company.\
-> Q: What’s your name?\
-> Q: What’s your name?\
-> A: It was “R.V.”\
-> Q: What does your name mean?\
-> A: It is a nickname for your name.
+> Q: And what’s your work?\
+> A: Your name.\
+> Q: What’s your job?\
+> A: Your job.\
+> Q: What’s your job title?\
+> A: Your job title.\
+> Q: What’s your occupation?\
+> A: Your occupation.\
+> Q: What’s your profession?\
+> A: Your profession.
 
-It answered the question with another question and then kept interviewing itself. The other sample opened with “I am a woman, and I am from the United States”, the same words as the sample shown at step 42,646, and gave no name at all.
+Its first answer is the same as at steps 28,640 and 44,770. From “What’s your job?” on, each answer just hands the question back. The other sample ignored the question and wrote what reads like part of a news article.
 
 It still repeats itself:
 
-> **The sun is a star that** is a hot star. In the center of the Sun, it is called the "corona". The corona, which is the corona, is the outer outer covering of the Sun. The corona is made of the Sun's visible spectrum and colors. The solar corona is the corona that is seen by most telescopes.
+> **The sun is a star that** is part of the Solar System. The Sun is a star that is part of the planets Solar System. This means that it is part of the Solar System. The Sun is a giant star. Sun comes into our Solar System from the outermost giant planet.
 
-That is “corona” six times in five sentences. It also puts the corona in the center of the Sun and then calls it the outer covering. The second claim is right: the corona is the Sun's outer atmosphere.
+Its first three sentences all say the same thing, and the last two are wrong: astronomers class the Sun as a dwarf star, not a giant, and it did not come from a planet. The other sample for the language-learning prompt also looped: after five sentences it went back to its opening and started again.
 
-Its Python is still mixed. Given `class BankAccount:`, one sample wrote a class that works, though nothing stops the balance from going below zero:
+Its Python is still mixed. Given `def is_prime(n):`, one sample wrote two functions and then stopped by itself:
 
 ```python
-class BankAccount:
-	def __init__(self, account, name, balance):
-		self.account = account
-		self.name = name
-		self.balance = balance
+def is_prime(n):
+	for i in range(2,int(n**0.5)+1):
+		if n%i==0:
+			return False
+	return True
 
-	def deposit(self, amount):
-		self.balance += amount
-
-	def withdraw(self, amount):
-		self.balance -= amount
-
-	def showbalance(self):
-		print(f'The account balance is {self.balance}')
+def sum_squares(n):
+	summa=0
+	for i in range(1,n+1):
+		summa+=i**2
+	return summa
 ```
 
-The other sample stores the owner's age in the account, as samples at steps 32,278, 34,112, 38,869 and 42,646 did. As at the first two of those steps, a deposit makes the owner older:
+`sum_squares` is now correct. At step 44,770 it left out 1 squared, and at step 42,646 it added up `i*(i+1)**2`. `is_prime` still calls 0 and 1 prime, as samples at steps 34,112, 38,869, 42,646 and 44,770 did. The other sample rejects 1 but still calls 0 prime, and it tries every number below n instead of stopping at the square root.
+
+Given `class BankAccount:`, one sample stores the owner's age and no balance. Samples at five earlier steps, starting at step 32,278, also stored the age. As at step 34,112, a deposit makes the owner older and a withdrawal makes them younger. These lines are the same, character for character, as the ones shown then:
 
 ```python
 class BankAccount:
-	def __init__(self, name, age):
-		self.name = name
+	def __init__(self, owner, age):
+		self.owner = owner
 		self.age = age
 
 	def deposit(self, amount):
 		self.age += amount
+		return self
+
+	def withdraw(self, amount):
+		self.age -= amount
+		return self
 ```
 
-Its next method, `get_account_info`, prints `self.balance`, which it never created, so calling that method would fail.
+Two methods later it names a method `yield`, which is a reserved word in Python, so the sample as a whole would not run. The other sample does keep a balance, but for a ten-digit account number with a balance above zero, its `checkBalance` prints “You have enough funds, you can't go ahead and pay off your balance.” and returns `False`.
 
-Given `class Stack:`, one sample named its list `queue` and built a queue, as one did at step 35,988: `push` adds at the front and `pop` takes from the back, so the oldest item comes out first. A stack should give back the newest. The other `Stack` has its `push` commented out, as at step 42,646.
-
-Given `def is_prime(n):`, both samples only try divisors up to the square root of n. The one that returns an answer still calls 0 and 1 prime, as samples at steps 38,869 and 42,646 did. The function it wrote next, `sum_squares`, now adds real squares, but it starts at 2 and so leaves out 1 squared. At step 42,646 it added up `i*(i+1)**2`.
+Given `class Stack:`, one sample named its list `queue`, as samples at steps 34,112, 35,988 and 44,770 did, and like the last two of those it built a queue. This time `push` adds at the back and `pop` removes from the front, so the oldest item goes first. A stack should give back the newest. Its `pop` also throws the item away instead of returning it. The other `Stack` is right as far as it got: `push` and `pop` both use the end of the list, though the `if` in `push` does the same thing either way. It reached its length limit just as it started `is_empty`, which both methods call.
 
 Laptick-1 doesn't know it is Laptick. Nothing it has read so far is about itself.
 
